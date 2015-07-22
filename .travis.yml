@@ -6,4 +6,4 @@ python:
   - "3.3"
   - "3.4"
 install: "pip install -r requirements_py2.txt"
-script: tests
+script: python tests.py
