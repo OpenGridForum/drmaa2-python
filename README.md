@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/troeger/drmaa2-python.svg?branch=master)](https://travis-ci.org/troeger/drmaa2-python)
+
 # DRMAA2 Python language binding
 
 This repository offers a reference implementation for the DRMAA2 Python language binding.   
