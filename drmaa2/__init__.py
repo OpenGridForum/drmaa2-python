@@ -19,6 +19,7 @@ ZERO_TIME = 0
 
 # Implementation-independent enumerations
 
+
 class JobState(Enum):
     UNDETERMINED = 0
     QUEUED = 1
@@ -29,6 +30,7 @@ class JobState(Enum):
     REQUEUED_HELD = 6
     DONE = 7
     FAILED = 8
+
 
 class OperatingSystem(Enum):
     OTHER_OS = 0
@@ -43,6 +45,7 @@ class OperatingSystem(Enum):
     UNIXWARE = 9
     WIN = 10
     WINNT = 11
+
 
 class CpuArchitecture(Enum):
     OTHER_CPU = 0
@@ -63,10 +66,12 @@ class CpuArchitecture(Enum):
     SPARC = 14
     SPARC64 = 15
 
+
 class Event(Enum):
     NEW_STATE = 0
     MIGRATED = 1
     ATTRIBUTE_CHANGE = 2
+
 
 class Capability(Enum):
     ADVANCE_RESERVATION = 0
@@ -85,7 +90,8 @@ class Capability(Enum):
 
 # Abstract classes, to be realized by implementation
 
-class ReservationSession():
+
+class ReservationSession:
     """ Every ReservationSession instance acts as container for advance reservations in the DRM system. """
     __metaclass__ = ABCMeta
 
@@ -128,7 +134,8 @@ class ReservationSession():
         """
         pass
 
-class Reservation():
+
+class Reservation:
     """ The Reservation class represents attributes and methods available for an
         advance reservation successfully created in the DRM system.
     """
@@ -154,7 +161,8 @@ class Reservation():
         """
         pass
 
-class JobArray():
+
+class JobArray:
     """ An instance of the JobArray interface represents a set of jobs created by one operation.
 
         The job control functions allow modifying the status of the job array in the DRM system,
@@ -200,7 +208,8 @@ class JobArray():
         """
         pass
 
-class JobSession():
+
+class JobSession:
     """ A job session acts as container for job instances controlled through the DRMAA API.
        The session methods support the submission of new jobs and the monitoring of existing jobs.
        The relationship between jobs and their session is persisted.
@@ -297,7 +306,7 @@ class JobSession():
         pass
 
 
-class Job():
+class Job:
     """ Every job in the JobSession is represented by its own instance of the Job class.
         It allows to instruct the DRM system of a job status change, and to query the properties
         of the job in the DRM system.
@@ -387,7 +396,8 @@ class Job():
         """
         pass
 
-class MonitoringSession():
+
+class MonitoringSession:
     """ The MonitoringSession class provides a set of stateless methods for fetching information
         about the DRM system and the DRMAA implementation itself.
     """
@@ -452,8 +462,8 @@ class MonitoringSession():
             This method returns a list of MachineInfo objects, each representing a machine available in the DRM system
             as execution host.
 
-            The names parameter is a list of strings. If given, then it will restrict the result to MachineInfo instances
-            that have one of the names given in the list.
+            The names parameter is a list of strings. If given, then it will restrict the result to MachineInfo
+            instances that have one of the names given in the list.
 
             The returned list might be empty or incomplete based on machine or system policies. It might also contain
             machines that are not accessible for the user, e.g., because of host configuration limits.
@@ -490,8 +500,8 @@ drms_version = impl.drms_version
 drmaa_name = impl.drmaa_name
 drmaa_version = impl.drmaa_version
 job_template_impl_spec = impl.job_template_impl_spec
-job_info_impl_spec  = impl.job_info_impl_spec
-reservation_template_impl_spec  = impl.reservation_template_impl_spec
+job_info_impl_spec = impl.job_info_impl_spec
+reservation_template_impl_spec = impl.reservation_template_impl_spec
 reservation_info_impl_spec = impl.reservation_info_impl_spec
 queue_info_impl_spec = impl.queue_info_impl_spec
 machine_info_impl_spec = impl.machine_info_impl_spec
@@ -499,40 +509,46 @@ notification_impl_spec = impl.notification_impl_spec
 
 # Extensible data structures
 
-#TODO: Distinguish mandatory and optional ones, fetch optional from implementation
+# TODO: Distinguish mandatory and optional ones, fetch optional from implementation
 
-Notification = namedtuple('Notification', ['event', 'job_id', 'session_name', 'job_state'] + impl.notification_impl_spec)
+Notification = namedtuple('Notification', ['event', 'job_id', 'session_name', 'job_state']
+                          + impl.notification_impl_spec)
 Notification.__new__.__defaults__ = tuple([None]*len(Notification._fields))
 
-JobTemplate = namedtuple( 'JobTemplate',  ['remote_command', 'args', 'submit_as_hold' , 'rerunnable' ,
-                                           'job_environment', 'working_directory', 'job_category',
-                                           'email', 'email_on_started', 'email_on_terminated', 'job_name',
-                                           'input_path', 'output_path', 'error_path', 'join_files' ,
-                                           'reservation_id', 'queue_name', 'min_slots', 'max_slots',
-                                           'priority', 'candidate_machines', 'min_phys_memory', 'machine_os',
-                                           'machine_arch', 'start_time', 'deadline_time', 'stage_in_files',
-                                           'stage_out_files', 'resource_limits', 'accounting_id'] + impl.job_template_impl_spec)
+JobTemplate = namedtuple('JobTemplate', ['remote_command', 'args', 'submit_as_hold', 'rerunnable',
+                                         'job_environment', 'working_directory', 'job_category',
+                                         'email', 'email_on_started', 'email_on_terminated', 'job_name',
+                                         'input_path', 'output_path', 'error_path', 'join_files',
+                                         'reservation_id', 'queue_name', 'min_slots', 'max_slots',
+                                         'priority', 'candidate_machines', 'min_phys_memory', 'machine_os',
+                                         'machine_arch', 'start_time', 'deadline_time', 'stage_in_files',
+                                         'stage_out_files', 'resource_limits', 'accounting_id']
+                         + impl.job_template_impl_spec)
 JobTemplate.__new__.__defaults__ = tuple([None]*len(JobTemplate._fields))
 
 QueueInfo = namedtuple('QueueInfo', ['name'] + impl.queue_info_impl_spec)
 QueueInfo.__new__.__defaults__ = tuple([None]*len(QueueInfo._fields))
 
-JobInfo = namedtuple('JobInfo', [   'job_id', 'job_name', 'exit_status', 'terminating_signal' , 'annotation' , 'job_state' , 'job_sub_state',
-                                    'allocated_machines' , 'submission_machine', 'job_owner', 'slots', 'queue_name', 'wallclock_time', 'cpu_time',
-                                    'submission_time','dispatch_time','finish_time'] + impl.job_info_impl_spec)
+JobInfo = namedtuple('JobInfo', ['job_id', 'job_name', 'exit_status', 'terminating_signal', 'annotation', 'job_state',
+                                 'job_sub_state', 'allocated_machines', 'submission_machine', 'job_owner', 'slots',
+                                 'queue_name', 'wallclock_time', 'cpu_time', 'submission_time', 'dispatch_time',
+                                 'finish_time'] + impl.job_info_impl_spec)
 JobInfo.__new__.__defaults__ = tuple([None]*len(JobInfo._fields))
 
-MachineInfo = namedtuple('MachineInfo', [   'name', 'available', 'sockets', 'cores_per_socket', 'threads_per_core', 'load' , 'phys_memory', 
-                                            'virt_memory', 'machine_os', 'machine_os_version', 'machine_arch'] + impl.machine_info_impl_spec)
+MachineInfo = namedtuple('MachineInfo', ['name', 'available', 'sockets', 'cores_per_socket', 'threads_per_core',
+                                         'load', 'phys_memory', 'virt_memory', 'machine_os', 'machine_os_version',
+                                         'machine_arch'] + impl.machine_info_impl_spec)
 MachineInfo.__new__.__defaults__ = tuple([None]*len(MachineInfo._fields))
 
-ReservationInfo = namedtuple('ReservationInfo', [   'reservation_id', 'reservation_name', 'reserved_start_time', 'reserved_end_time', 'users_acl', 
-                                                    'reserved_slots', 'reserved_machines'] + impl.reservation_info_impl_spec)
+ReservationInfo = namedtuple('ReservationInfo', ['reservation_id', 'reservation_name', 'reserved_start_time',
+                                                 'reserved_end_time', 'users_acl', 'reserved_slots',
+                                                 'reserved_machines'] + impl.reservation_info_impl_spec)
 ReservationInfo.__new__.__defaults__ = tuple([None]*len(ReservationInfo._fields))
 
-ReservationTemplate = namedtuple('ReservationTemplate', [   'reservation_name', 'start_time', 'end_time', 'duration', 'min_slots', 'max_slots', 
-                                                            'job_category', 'users_acl', 'candidate_machines', 'min_phys_memory', 'machine_os', 
-                                                            'machine_arch'] + impl.reservation_template_impl_spec)
+ReservationTemplate = namedtuple('ReservationTemplate', ['reservation_name', 'start_time', 'end_time', 'duration',
+                                                         'min_slots', 'max_slots', 'job_category', 'users_acl',
+                                                         'candidate_machines', 'min_phys_memory', 'machine_os',
+                                                         'machine_arch'] + impl.reservation_template_impl_spec)
 ReservationTemplate.__new__.__defaults__ = tuple([None]*len(ReservationTemplate._fields))
 
 SlotInfo = namedtuple('SlotInfo', ['machine_name', 'slots'])
@@ -541,9 +557,11 @@ SlotInfo.__new__.__defaults__ = (None, None)
 Version = namedtuple('Version', ['major', 'minor'])
 Version.__new__.__defaults__ = (None, None)
 
+
 class DeniedByDrmsException(Exception):
     """ The DRM system rejected the operation due to security issues. """
     pass
+
 
 class DrmCommunicationException(Exception):
     """ The DRMAA implementation could not contact the DRM system.
@@ -552,6 +570,7 @@ class DrmCommunicationException(Exception):
     """
     pass
 
+
 class TryLaterException(Exception):
     """ The DRMAA implementation detected a transient problem while
         performing the operation, for example due to excessive load.
@@ -559,11 +578,13 @@ class TryLaterException(Exception):
     """
     pass
 
+
 class TimeoutException(Exception):
     """ The timeout given in one the waiting functions was reached
         without successfully finishing the waiting attempt.
     """
     pass
+
 
 class InternalException(Exception):
     """ An unexpected or internal error occurred in the DRMAA library,
@@ -572,11 +593,13 @@ class InternalException(Exception):
     """
     pass
 
+
 class InvalidArgumentException(Exception):
     """ From the viewpoint of the DRMAA library, an input parameter for
         the particular method call is invalid or inappropriate.
     """
     pass
+
 
 class InvalidSessionException(Exception):
     """ The session used for the method call is not valid,
@@ -584,9 +607,11 @@ class InvalidSessionException(Exception):
     """
     pass
 
+
 class InvalidStateException(Exception):
     """ The operation is not allowed in the current state of the job. """
     pass
+
 
 class OutOfResourceException(Exception):
     """ The implementation has run out of operating system resources,
@@ -594,19 +619,23 @@ class OutOfResourceException(Exception):
     """
     pass
 
+
 class UnsupportedAttributeException(Exception):
     """ The optional attribute is not supported by this DRMAA implementation. """
     pass
 
+
 class UnsupportedOperationException(Exception):
     """ The method is not supported by this DRMAA implementation."""
     pass
+
 
 class ImplementationSpecificException(Exception):
     """ The implementation needs to report a special error condition that
         cannot be mapped to one of the other exceptions.
     """
     pass
+
 
 # Module-level functions
 
@@ -618,12 +647,14 @@ def supports(capability):
     """
     return impl.supports(capability)
 
+
 def create_job_session(session_name=None, contact=None):
     """ create_job_session(str, str) -> JobSession object
 
         The method creates and opens a new job session.
     """
     return impl.create_job_session(session_name, contact)
+
 
 def create_reservation_session(session_name=None, contact=None):
     """ create_reservation_session(str, str) -> ReservationSession object
@@ -632,12 +663,14 @@ def create_reservation_session(session_name=None, contact=None):
     """
     return impl.create_reservation_session(session_name, contact)
 
+
 def open_job_session(session_name):
     """ open_job_session(str) -> JobSession object
 
         The method opens an existing job session.
     """
     return impl.open_job_session(session_name)
+
 
 def open_reservation_session(session_name):
     """ open_reservation_session(str) -> ReservationSession object
@@ -646,12 +679,14 @@ def open_reservation_session(session_name):
     """
     return impl.open_reservation_session(session_name)
 
+
 def open_monitoring_session(contact=None):
     """ open_monitoring_session(str) -> MonitoringSession object
 
         The method opens a monitoring session.
     """
     return impl.open_monitoring_session(contact)
+
 
 def destroy_session(session):
     """ destroy_session(str) -> None
@@ -660,12 +695,14 @@ def destroy_session(session):
     """
     impl.destroy_session(session)
 
+
 def get_job_session_names():
     """ get_job_session_names() -> list
 
         This method returns a string list of job session names that are valid input for the open_job_session method.
     """
     return impl.get_job_session_names()
+
 
 def get_reservation_session_names():
     """ get_reservation_session_names() -> list
@@ -675,6 +712,7 @@ def get_reservation_session_names():
     """
     return impl.get_reservation_session_names()
 
+
 def register_event_notification(callback):
     """ register_event_notification(function) -> None
 
@@ -682,6 +720,7 @@ def register_event_notification(callback):
     The function should accept one parameter that is filled with a Notification object.
     """
     impl.register_event_notification(callback)
+
 
 def describe_attribute(instance, name):
     """ describe_attribute(namedtuple, str) -> str
