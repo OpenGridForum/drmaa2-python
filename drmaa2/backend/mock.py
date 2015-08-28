@@ -9,34 +9,36 @@ import drmaa2
 
 # Definition part
 
-job_template_impl_spec          = ['mock_testattr']
-job_info_impl_spec              = []
-reservation_template_impl_spec  = []
-reservation_info_impl_spec      = []
-queue_info_impl_spec            = []
-machine_info_impl_spec          = []
-notification_impl_spec          = []
+job_template_impl_spec = ['mock_testattr']
+job_info_impl_spec = []
+reservation_template_impl_spec = []
+reservation_info_impl_spec = []
+queue_info_impl_spec = []
+machine_info_impl_spec = []
+notification_impl_spec = []
 
-CORE_FILE_SIZE  = "CORE_FILE_SIZE"
-CPU_TIME        = "CPU_TIME"
-DATA_SIZE       = "DATA_SIZE"
-FILE_SIZE       = "FILE_SIZE"
-OPEN_FILES      = "OPEN_FILES"
-STACK_SIZE      = "STACK_SIZE"
-VIRTUAL_MEMORY  = "VIRTUAL_MEMORY"
-WALLCLOCK_TIME  = "WALLCLOCK_TIME"
+CORE_FILE_SIZE = "CORE_FILE_SIZE"
+CPU_TIME = "CPU_TIME"
+DATA_SIZE = "DATA_SIZE"
+FILE_SIZE = "FILE_SIZE"
+OPEN_FILES = "OPEN_FILES"
+STACK_SIZE = "STACK_SIZE"
+VIRTUAL_MEMORY = "VIRTUAL_MEMORY"
+WALLCLOCK_TIME = "WALLCLOCK_TIME"
 
-drms_name        = "Mock DRM"
-drms_version     = {'major': 1, 'minor': 0}
-drmaa_name       = "Mock DRM DRMAA Implementation"
-drmaa_version    = {'major': 2, 'minor': 0}
+drms_name = "Mock DRM"
+drms_version = {'major': 1, 'minor': 0}
+drmaa_name = "Mock DRM DRMAA Implementation"
+drmaa_version = {'major': 2, 'minor': 0}
 
 # Implementation part
 
 app_callback = None
 
+
 def describe_attribute(instance, name):
     return name
+
 
 class MonitoringSession(drmaa2.MonitoringSession):
     def get_all_reservations(self):
@@ -54,7 +56,8 @@ class MonitoringSession(drmaa2.MonitoringSession):
     def close(self):
         pass
 
-class JobSession():
+
+class JobSession:
     contact = None
     session_name = None
     job_categories = None
@@ -81,7 +84,7 @@ class JobSession():
         pass
 
 
-class ReservationSession():
+class ReservationSession:
     contact = None
     session_name = None
 
@@ -98,8 +101,8 @@ class ReservationSession():
         pass
 
 
-class Job():
-    jobId = None
+class Job:
+    job_id = None
     session_name = None
     job_template = None
 
@@ -135,8 +138,10 @@ class Job():
 
 # Module-level functions
 
+
 def describe_attribute(instance, name):
     return name
+
 
 def supports(capability):
     if capability in (drmaa2.Capability.CALLBACK, drmaa2.Capability.ADVANCE_RESERVATION):
@@ -144,29 +149,38 @@ def supports(capability):
     else:
         return False
 
+
 def create_job_session(session_name=None, contact=None):
     return JobSession()
+
 
 def create_reservation_session(session_name=None, contact=None):
     return ReservationSession()
 
+
 def open_job_session(session_name):
     return JobSession()
+
 
 def open_reservation_session(session_name):
     return ReservationSession()
 
+
 def open_monitoring_session(contact=None):
     return MonitoringSession()
+
 
 def destroy_session(session):
     pass
 
+
 def get_job_session_names():
     return []
 
+
 def get_reservation_session_names():
     return []
+
 
 def register_event_notification(callback):
     app_callback = callback
