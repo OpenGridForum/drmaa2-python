@@ -27,9 +27,9 @@ VIRTUAL_MEMORY = "VIRTUAL_MEMORY"
 WALLCLOCK_TIME = "WALLCLOCK_TIME"
 
 drms_name = "Mock DRM"
-drms_version = {'major': 1, 'minor': 0}
+drms_version = {'major': '1', 'minor': '0'}
 drmaa_name = "Mock DRM DRMAA Implementation"
-drmaa_version = {'major': 2, 'minor': 0}
+drmaa_version = {'major': '2', 'minor': '0'}
 
 # Implementation part
 
